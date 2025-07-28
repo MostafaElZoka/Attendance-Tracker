@@ -12,10 +12,10 @@ public class Attendance
     [Required]
     public DateTime Date { get; set; }
     [Required]
-    public AttendaceStatus Status { get; set; }
+    public AttendanceStatus Status { get; set; }
 }
 
-public enum AttendaceStatus
+public enum AttendanceStatus
 {
     Present,
     Absent

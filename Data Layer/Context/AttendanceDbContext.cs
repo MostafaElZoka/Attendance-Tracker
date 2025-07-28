@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data_Layer.Context;
 
-internal class AttendanceDbContext:DbContext
+public class AttendanceDbContext:DbContext
 {
     internal DbSet<Employee> Employees { get; set; }
     internal DbSet<Department> Departments { get; set; }
