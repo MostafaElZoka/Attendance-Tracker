@@ -1,0 +1,16 @@
+# Build results
+bin/
+obj/
+*.exe
+*.dll
+
+# VS-related
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Others
+*.log
+*.DS_Store
