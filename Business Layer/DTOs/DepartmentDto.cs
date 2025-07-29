@@ -7,18 +7,20 @@ using System.Threading.Tasks;
 
 namespace Business_Layer.DTOs
 {
-    public class DepartmentDto
+    public class DepartmentDto:UpdateDepartmentDto
     {
-        [Required]
-        [StringLength(50, MinimumLength = 3)]
-        public string Name { get; set; }
+        //public int Id { get; set; }
+        public int EmployeesCount { get; set; } = 0;
+        //[Required]
+        //[StringLength(50, MinimumLength = 3)]
+        //public string Name { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string Location { get; set; }
+        //[Required]
+        //[MaxLength(100)]
+        //public string Location { get; set; }
 
-        [Required]
-        [MaxLength(4)]
-        public string Code { get; set; }
+        //[Required]
+        //[MaxLength(4)]
+        //public string Code { get; set; }
     }
 }

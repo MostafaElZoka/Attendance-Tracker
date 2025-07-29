@@ -6,6 +6,10 @@ namespace Data_Layer.Context;
 
 public class AttendanceDbContext:DbContext
 {
+    public AttendanceDbContext(DbContextOptions<AttendanceDbContext> options) : base(options)
+    {
+    }
+
     internal DbSet<Employee> Employees { get; set; }
     internal DbSet<Department> Departments { get; set; }
     internal DbSet<Attendance> Attendances { get; set; }

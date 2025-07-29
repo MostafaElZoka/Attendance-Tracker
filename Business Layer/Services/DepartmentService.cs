@@ -69,8 +69,8 @@ namespace Business_Layer.Services
                 throw new Exception($"Department with ID {department.Id} not found.");
             }
 
-            if (department.Code.Length != 4)
-                throw new Exception("Code must be exactly 4 characters");
+            if (department.Code.Length > 4)
+                throw new Exception("Code must no exceed 4 characters");
 
             if (dept.Code != department.Code &&
                 await unitOfWork.Departments.Exists(d => d.Code == department.Code))

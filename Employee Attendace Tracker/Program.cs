@@ -1,3 +1,5 @@
+using Business_Layer.Extensions;
+using Business_Layer.Interfaces;
 using Data_Layer.Context;
 using Data_Layer.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +15,12 @@ namespace Employee_Attendace_Tracker
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddAttendanceDbContext();
+            builder.Services.AddAttendanceDbContext();//injecting dbcontext
+
+            builder.Services.AddBusinessServices(); //injecting services
 
             var app = builder.Build();
-
+             //data seeding
             using(var scope = app.Services.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<AttendanceDbContext>();
