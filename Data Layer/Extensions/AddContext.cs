@@ -1,4 +1,5 @@
 ﻿using Data_Layer.Context;
+using Data_Layer.Unit_Of_Work;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,11 @@ namespace Data_Layer.Extensions
         {
             services.AddDbContext<AttendanceDbContext>(options =>
                 options.UseInMemoryDatabase("AttendanceDb"));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
         }
+
+
     }
 }
