@@ -2,6 +2,7 @@
 
 using Data_Layer.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Data_Layer.Repository
@@ -25,6 +26,11 @@ namespace Data_Layer.Repository
         public void Delete(T entity)
         {
             _dbset.Remove(entity);
+        }
+
+        public async Task<bool> Exists(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbset.AnyAsync(predicate);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()

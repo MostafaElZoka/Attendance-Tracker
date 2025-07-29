@@ -1,4 +1,5 @@
-﻿using Business_Layer.Interfaces;
+﻿using Business_Layer.DTOs;
+using Business_Layer.Interfaces;
 using Data_Layer.Models;
 using Data_Layer.Repository;
 using Data_Layer.Unit_Of_Work;
@@ -12,9 +13,25 @@ namespace Business_Layer.Services
 {
     public class DepartmentService(IUnitOfWork unitOfWork) : IDepartmentService
     {
-        public Task AddDepartment(Department department)
+        public async Task AddDepartment(DepartmentDto departmentDto)
         {
-            throw new NotImplementedException();
+            if (departmentDto.Code.Length != 4)
+                throw new Exception("Code must be exactly 4 characters");
+            
+            if (await unitOfWork.Departments.Exists(d => d.Code == departmentDto.Code))
+                throw new Exception("Department code must be unique");
+
+            if (await unitOfWork.Departments.Exists(d => d.Name == departmentDto.Name))
+                throw new Exception("Department name must be unique");
+
+            var dept = new Department
+            {
+                Name = departmentDto.Name,
+                Location = departmentDto.Location,
+                Code = departmentDto.Code.ToUpper()
+            };
+           await unitOfWork.Departments.AddAsync(dept);
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteDepartmentAsync(int id)
@@ -44,9 +61,29 @@ namespace Business_Layer.Services
             return depts;
         }
 
-        public Task UpdateDepartmentAsync(Department department)
+        public async Task UpdateDepartmentAsync(UpdateDepartmentDto department)
         {
-            throw new NotImplementedException();
+            var dept = await unitOfWork.Departments.GetByIdAsync(department.Id);
+            if (dept == null)
+            {
+                throw new Exception($"Department with ID {department.Id} not found.");
+            }
+
+            if (department.Code.Length != 4)
+                throw new Exception("Code must be exactly 4 characters");
+
+            if (dept.Code != department.Code &&
+                await unitOfWork.Departments.Exists(d => d.Code == department.Code))
+                throw new Exception("Department code must be unique");
+
+            if (dept.Name != department.Name && await unitOfWork.Departments.Exists(d => d.Name == department.Name))
+                throw new Exception("Department name must be unique");
+
+            dept.Name = department.Name;
+            dept.Location = department.Location;
+            dept.Code = department.Code.ToUpper();
+            unitOfWork.Departments.Update(dept);
+            await unitOfWork.SaveChangesAsync();
         }
     }
 }

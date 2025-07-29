@@ -47,7 +47,7 @@ namespace Data_Layer.Extensions
                     LastName = "Omar"
                 },
                 Email = "ahmed.omar@example.com",
-                DepartmenttId = hrDept.Id
+                DepartmentId = hrDept.Id
             };
 
             var emp2 = new Employee
@@ -60,7 +60,7 @@ namespace Data_Layer.Extensions
                     LastName = "Salama"
                 },
                 Email = "amr.salama@example.com",
-                DepartmenttId = itDept.Id
+                DepartmentId = itDept.Id
             }; 
 
             context.Employees.AddRange(emp1, emp2);

@@ -1,4 +1,5 @@
-﻿using Data_Layer.Models;
+﻿using Business_Layer.DTOs;
+using Data_Layer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace Business_Layer.Interfaces
     {
         public Task<IEnumerable<Department>> GetAllDepartmentsAsync();
         public Task<Department> GetDepartmentByIdAsync(int id);
-        public Task AddDepartment(Department department);
-        public Task UpdateDepartmentAsync(Department department);
+        public Task AddDepartment(DepartmentDto department);
+        public Task UpdateDepartmentAsync(UpdateDepartmentDto department);
         public Task DeleteDepartmentAsync(int id);
     }
 }

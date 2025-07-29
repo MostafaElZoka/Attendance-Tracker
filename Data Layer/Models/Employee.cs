@@ -17,7 +17,7 @@ public class Employee
     [EmailAddress]
     [Required]
     public string Email { get; set; }
-    public int DepartmenttId { get; set; }
+    public int DepartmentId { get; set; }
     public Department Department { get; set; }
 
 }
