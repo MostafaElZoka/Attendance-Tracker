@@ -66,11 +66,11 @@ internal class EmployeeService(IUnitOfWork unitOfWork) : IEmployeeService
         if (emp == null)
             throw new Exception($"Employee with ID {employeeId} not found.");
 
-        var attendances = await unitOfWork.Attendances.GetAllAsync();
-        var filtered = attendances.Where(a=> a.EmployeeId == emp.Code && a.Date >= firstDay && a.Date <= lastDay);
+        var attendances = (await unitOfWork.Attendances.GetAllAsync())
+            .Where(a => a.EmployeeId == emp.Code && a.Date >= firstDay && a.Date <= lastDay);
 
-        var presents = filtered.Count(p => p.Status == AttendanceStatus.Present);
-        var absents = filtered.Count(p => p.Status == AttendanceStatus.Absent);
+        var presents = attendances.Count(p => p.Status == AttendanceStatus.Present);
+        var absents = attendances.Count(p => p.Status == AttendanceStatus.Absent);
         var total = absents + presents;
         var percentage = Math.Round((double)presents / total * 100, 2);
 

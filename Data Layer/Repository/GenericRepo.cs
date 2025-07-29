@@ -33,9 +33,13 @@ namespace Data_Layer.Repository
             return await _dbset.AnyAsync(predicate);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
         {
-            return await _dbset.ToListAsync();
+            IQueryable<T> query = _dbset;
+            foreach (var include in includes)
+                query = query.Include(include);
+
+            return await query.ToListAsync();
         }
 
         public async Task<T?> GetByIdAsync(int id)
