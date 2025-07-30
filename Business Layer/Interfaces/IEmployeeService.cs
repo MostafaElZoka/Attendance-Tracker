@@ -11,7 +11,7 @@ namespace Business_Layer.Interfaces
     public interface IEmployeeService
     {
         public Task<IEnumerable<EmployeeDto>> GetAllEmployeesAsync();
-        public Task<EmployeeDto> GetEmployeeByIdAsync(int id);
+        public Task<EmployeeDto> GetEmployeeDtoByIdAsync(int id);
         public Task AddEmployee(AddEmployeeDto employee);
         public Task UpdateEmployeeAsync(EmployeeDto updateEmployee);
         public Task DeleteEmployeeAsync(int id);

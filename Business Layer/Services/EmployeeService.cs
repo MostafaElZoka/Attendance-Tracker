@@ -82,7 +82,7 @@ internal class EmployeeService(IUnitOfWork unitOfWork) : IEmployeeService
         };
     }
 
-    public async Task<EmployeeDto> GetEmployeeByIdAsync(int id)
+    public async Task<EmployeeDto> GetEmployeeDtoByIdAsync(int id)
     {
         var employee = await unitOfWork.Employees.GetByIdAsync(id);
         if (employee == null)

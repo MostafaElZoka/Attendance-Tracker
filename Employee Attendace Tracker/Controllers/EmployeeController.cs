@@ -7,15 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 namespace Employee_Attendace_Tracker.Controllers
 {
-    public class EmployeeController(IEmployeeService employeeService) : Controller
+    public class EmployeeController(IEmployeeService employeeService,IDepartmentService departmentService) : Controller
     {
         // GET: EmployeeController1
         public async Task<ActionResult> Index()
         {
             var emps = await employeeService.GetAllEmployeesAsync();
+            var depts = await departmentService.GetAllDepartmentsAsync();
 
+            ViewBag.Departments = new SelectList(depts, "Id", "Name");
             return View(emps);
         }
 
@@ -24,13 +27,15 @@ namespace Employee_Attendace_Tracker.Controllers
         {
             try
             {
-                var emp = await employeeService.GetEmployeeByIdAsync(id);
+                var emp = await employeeService.GetEmployeeDtoByIdAsync(id);
                 var summary = await employeeService.GetAttendanceMonthSummaryAsync(id);
+                var dept = await departmentService.GetDepartmentDtoByIdAsync(emp.DepartmentId);
 
                 var viewModel = new EmployeeDetailsViewModel
                 {
                     Employee = emp,
-                    AttendanceSummary = summary
+                    AttendanceSummary = summary,
+                    DepartmentName = dept.Name
                 };
 
                 return View(viewModel);
@@ -75,15 +80,8 @@ namespace Employee_Attendace_Tracker.Controllers
         {
             try
             {
-                var emp = await employeeService.GetEmployeeByIdAsync(id);
-                var updatedEmp = new EmployeeDto
-                {
-                    Code = emp.Code,
-                    FullName = emp.FullName,
-                    Email = emp.Email,
-                    DepartmentId = emp.DepartmentId
-                };
-                return View(updatedEmp);
+                var emp = await employeeService.GetEmployeeDtoByIdAsync(id);
+                return View(emp);
             }
             catch (Exception ex)
             {
@@ -117,14 +115,8 @@ namespace Employee_Attendace_Tracker.Controllers
         {
             try
             {
-                var emp = await employeeService.GetEmployeeByIdAsync(id);
-                return View(new EmployeeDto
-                {
-                    Code = emp.Code,
-                    FullName = emp.FullName,
-                    Email = emp.Email,
-                    DepartmentId = emp.DepartmentId
-                });
+                var emp = await employeeService.GetEmployeeDtoByIdAsync(id);
+                return View(emp);
             }
             catch (Exception ex)
             {
