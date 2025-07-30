@@ -43,7 +43,7 @@ namespace Employee_Attendace_Tracker
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=Attendance}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
             app.Run();
