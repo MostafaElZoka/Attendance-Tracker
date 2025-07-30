@@ -103,9 +103,9 @@ internal class EmployeeService(IUnitOfWork unitOfWork) : IEmployeeService
         var emp = await unitOfWork.Employees.GetByIdAsync(updateEmployee.Code);
         if (emp == null)
          throw new Exception($"Employee with ID {updateEmployee.Code} not found.");
-        
 
-        if (await unitOfWork.Employees.Exists(e => e.Email == updateEmployee.Email))
+
+        if (await unitOfWork.Employees.Exists(e => e.Email == updateEmployee.Email && e.Code != updateEmployee.Code))
             throw new Exception("Email must be unique");
 
         if (!await unitOfWork.Departments.Exists(d => d.Id == updateEmployee.DepartmentId))

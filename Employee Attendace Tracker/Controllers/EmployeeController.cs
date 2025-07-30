@@ -86,6 +86,9 @@ namespace Employee_Attendace_Tracker.Controllers
             try
             {
                 var emp = await employeeService.GetEmployeeDtoByIdAsync(id);
+                var depts = await departmentService.GetAllDepartmentsAsync();
+
+                ViewBag.Departments = new SelectList(depts, "Id", "Name");
                 return View(emp);
             }
             catch (Exception ex)

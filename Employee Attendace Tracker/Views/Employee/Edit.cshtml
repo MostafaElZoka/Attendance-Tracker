@@ -1,0 +1,65 @@
+﻿@using Business_Layer.DTOs
+@model EmployeeDto
+
+@{
+    ViewData["Title"] = "Edit Employee";
+    var departments = ViewBag.Departments as SelectList;
+}
+
+<h2 class="mb-4">Edit Employee</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Code" />
+
+    <div class="mb-3">
+        <label asp-for="FullName.FirstName" class="form-label"></label>
+        <input asp-for="FullName.FirstName" class="form-control" />
+        <span asp-validation-for="FullName.FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FullName.SecondName" class="form-label"></label>
+        <input asp-for="FullName.SecondName" class="form-control" />
+        <span asp-validation-for="FullName.SecondName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FullName.ThirdName" class="form-label"></label>
+        <input asp-for="FullName.ThirdName" class="form-control" />
+        <span asp-validation-for="FullName.ThirdName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FullName.LastName" class="form-label"></label>
+        <input asp-for="FullName.LastName" class="form-control" />
+        <span asp-validation-for="FullName.LastName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+
+    <div class="mb-3">
+        <label asp-for="DepartmentId" class="form-label">Department</label>
+        <select asp-for="DepartmentId" class="form-select">
+            <option value="">Select a department</option>
+            @foreach (var dept in departments)
+            {
+                <option value="@dept.Value" selected="@(dept.Value == Model.DepartmentId.ToString())">
+                    @dept.Text
+                </option>
+            }
+        </select>
+        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
