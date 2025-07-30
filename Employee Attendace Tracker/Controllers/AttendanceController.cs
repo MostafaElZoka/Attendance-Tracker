@@ -1,4 +1,5 @@
-﻿using Business_Layer.Interfaces;
+﻿using Business_Layer.DTOs;
+using Business_Layer.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,16 +25,38 @@ namespace Employee_Attendace_Tracker.Controllers
         public async Task<IActionResult> Mark()
         {
             var emps = await employeeService.GetAllEmployeesAsync();
-            ViewBag.Employees = new SelectList(emps, "Code", "FullName.LastName");
+            ViewBag.Employees = new SelectList(emps, "Code", "DisplayFullName");
 
             return View();
         }
-        // GET: AttendanceController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        public async Task<IActionResult> GetStatus(int employeeId, DateTime date)
         {
-            return View();
+            if(date > DateTime.Today)
+            {
+                return Json(new { status ="Can't edit future dates" });
+            }
+            var attendance = (await attendanceService.GetAllAttendancesAsync(employeeId, null, date, date)).FirstOrDefault();
+
+            return Json(new {status = attendance?.Status.ToString()?? "Not Assigned" });
+
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SaveAttendance([FromBody]UpdateOrAddAttendanceDto dto)
+        {
+            var attendance = (await attendanceService.GetAllAttendancesAsync(dto.EmployeeId, null, dto.Date, dto.Date))
+                    .FirstOrDefault();
+            if(attendance != null)
+            {
+                await attendanceService.EditAttendance(attendance.Id, dto);
+            }
+            else
+            {
+                await attendanceService.AddAttendanceAsync(dto);
+            }
+            return Json(new {success = true});
+        }
         // GET: AttendanceController/Create
         public ActionResult Create()
         {
@@ -77,9 +100,11 @@ namespace Employee_Attendace_Tracker.Controllers
         }
 
         // GET: AttendanceController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int employeeId, DateTime date)
         {
-            return View();
+            var record = (await attendanceService.GetAllAttendancesAsync(employeeId, null, date, date)).FirstOrDefault();
+
+            return View(record);
         }
 
         // POST: AttendanceController/Delete/5

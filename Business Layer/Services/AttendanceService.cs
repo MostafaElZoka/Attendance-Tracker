@@ -50,9 +50,6 @@ internal class AttendanceService(IUnitOfWork unitOfWork) : IAttendanceService
         if (!await unitOfWork.Employees.Exists(e => e.Code == attendanceDto.EmployeeId))
             throw new Exception("Employee does not exist.");
 
-        if(await unitOfWork.Attendances.Exists(a=> a.EmployeeId == attendanceDto.EmployeeId && a.Date == attendanceDto.Date))
-            throw new Exception("Attendance record for this employee on this date already exists.");
-
         record.EmployeeId = attendanceDto.EmployeeId;
         record.Date = attendanceDto.Date;
         record.Status = attendanceDto.Status;
@@ -93,5 +90,10 @@ internal class AttendanceService(IUnitOfWork unitOfWork) : IAttendanceService
                              Status = att.Status
                          };
         return joinedDate.OrderByDescending(j => j.Date);
+    }
+
+    public Task<AttendanceDto> GetAttendanceAsync(int id)
+    {
+        throw new NotImplementedException();
     }
 }

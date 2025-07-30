@@ -9,4 +9,5 @@ public interface IAttendanceService
     public Task EditAttendance(int id,UpdateOrAddAttendanceDto attendanceDto);
     public Task DeleteAttendance(int id);
     public Task AddAttendanceAsync(UpdateOrAddAttendanceDto attendanceDto);
+    public Task<AttendanceDto> GetAttendanceAsync(int id);
 }
