@@ -12,6 +12,7 @@ namespace Employee_Attendace_Tracker.Controllers
 {
     public class EmployeeController(IEmployeeService employeeService,IDepartmentService departmentService) : Controller
     {
+
         // GET: EmployeeController1
         public async Task<ActionResult> Index()
         {
@@ -51,8 +52,11 @@ namespace Employee_Attendace_Tracker.Controllers
         }
 
         // GET: EmployeeController1/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
+            var depts = await departmentService.GetAllDepartmentsAsync();
+
+            ViewBag.Departments = new SelectList(depts, "Id", "Name");
             return View();
         }
 
@@ -66,6 +70,7 @@ namespace Employee_Attendace_Tracker.Controllers
             try
             {
                 await employeeService.AddEmployee(employeeDto);
+
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
@@ -116,7 +121,11 @@ namespace Employee_Attendace_Tracker.Controllers
             try
             {
                 var emp = await employeeService.GetEmployeeDtoByIdAsync(id);
+                var dept = await departmentService.GetDepartmentDtoByIdAsync(emp.DepartmentId);
+                ViewBag.Department = dept?.Name ?? "Unknown";
+                ViewBag.DepartmentId = emp.DepartmentId;
                 return View(emp);
+                
             }
             catch (Exception ex)
             {
