@@ -13,18 +13,7 @@ namespace Employee_Attendace_Tracker.Controllers
         public async Task<IActionResult> Index()
         {
             var depts = await departmentService.GetAllDepartmentsAsync();
-            var emps = await employeeService.GetAllEmployeesAsync();
-
-            var deptsDto = depts.Select(d => new DepartmentDto
-            {
-                Id = d.Id,
-                Name = d.Name,
-                Location = d.Location,
-                Code = d.Code,
-                EmployeesCount = emps.Count(e => e.DepartmentId == d.Id)
-            }).ToList();
-
-            return View(deptsDto);
+            return View(depts);
         }
 
 
@@ -59,17 +48,12 @@ namespace Employee_Attendace_Tracker.Controllers
         // GET: DepartmentController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
+
             try
             {
-                var dept = await departmentService.GetDepartmentByIdAsync(id);
-                var updateDto = new UpdateDepartmentDto
-                {
-                    Id = dept.Id,
-                    Name = dept.Name,
-                    Location = dept.Location,
-                    Code = dept.Code
-                };
-                return View(updateDto);
+                var dept = await departmentService.GetDepartmentForUpdateAsync(id);
+;
+                return View(dept);
             }
             catch (Exception ex)
             {
@@ -103,19 +87,13 @@ namespace Employee_Attendace_Tracker.Controllers
         {
             try
             {
-                var department = await departmentService.GetDepartmentByIdAsync(id);
+                var department = await departmentService.GetDepartmentDtoByIdAsync(id);
                 var employees = (await employeeService.GetAllEmployeesAsync())
                     .Where(e => e.DepartmentId == id);
 
                 ViewBag.EmployeeCount = employees.Count();
 
-                return View(new DepartmentDto
-                {
-                    Id = department.Id,
-                    Name = department.Name,
-                    Code = department.Code,
-                    Location = department.Location
-                });
+                return View(department);
             }
             catch (Exception ex)
             {

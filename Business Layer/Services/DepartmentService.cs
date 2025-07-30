@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Business_Layer.Services
 {
-    public class DepartmentService(IUnitOfWork unitOfWork) : IDepartmentService
+    public class DepartmentService(IUnitOfWork unitOfWork, IEmployeeService employeeService) : IDepartmentService
     {
         public async Task AddDepartment(DepartmentDto departmentDto)
         {
@@ -55,10 +55,21 @@ namespace Business_Layer.Services
             return dept;
         }
 
-        public async Task<IEnumerable<Department>> GetAllDepartmentsAsync()
+        public async Task<IEnumerable<DepartmentDto>> GetAllDepartmentsAsync()
         {
             var depts = await unitOfWork.Departments.GetAllAsync();
-            return depts;
+            var emps = await employeeService.GetAllEmployeesAsync();
+
+            var deptsDto = depts.Select(d => new DepartmentDto
+            {
+                Id = d.Id,
+                Name = d.Name,
+                Location = d.Location,
+                Code = d.Code,
+                EmployeesCount = emps.Count(e => e.DepartmentId == d.Id)
+            }).ToList();
+
+            return deptsDto;
         }
 
         public async Task UpdateDepartmentAsync(UpdateDepartmentDto department)
@@ -85,5 +96,36 @@ namespace Business_Layer.Services
             unitOfWork.Departments.Update(dept);
             await unitOfWork.SaveChangesAsync();
         }
+
+        public async Task<UpdateDepartmentDto> GetDepartmentForUpdateAsync(int id)
+        {
+            var dept = await unitOfWork.Departments.GetByIdAsync(id);
+            if (dept == null)
+                throw new Exception($"Department with ID {id} not found.");
+
+            return new UpdateDepartmentDto
+            {
+                Id = dept.Id,
+                Name = dept.Name,
+                Location = dept.Location,
+                Code = dept.Code
+            };
+        }
+
+        public async Task<DepartmentDto> GetDepartmentDtoByIdAsync(int id)
+        {
+            var dept = await unitOfWork.Departments.GetByIdAsync(id);
+            if (dept == null)
+                throw new Exception($"Department with ID {id} not found.");
+
+            return new DepartmentDto
+            {
+                Id = dept.Id,
+                Name = dept.Name,
+                Location = dept.Location,
+                Code = dept.Code
+            };
+        }
+
     }
 }
