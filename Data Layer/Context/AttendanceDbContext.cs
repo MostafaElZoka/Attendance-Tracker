@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data_Layer.Context;
 
-public class AttendanceDbContext:DbContext
+internal class AttendanceDbContext:DbContext
 {
     public AttendanceDbContext(DbContextOptions<AttendanceDbContext> options) : base(options)
     {

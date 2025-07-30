@@ -1,5 +1,6 @@
 ﻿using Data_Layer.Context;
 using Data_Layer.Models;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Data_Layer.Extensions
 {
-    public static class SeedExtension
+    internal static class SeedExtension
     {
         public static void SeedTestData(this AttendanceDbContext context)
         {

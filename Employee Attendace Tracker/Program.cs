@@ -20,12 +20,13 @@ namespace Employee_Attendace_Tracker
             builder.Services.AddBusinessServices(); //injecting services
 
             var app = builder.Build();
-             //data seeding
-            using(var scope = app.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<AttendanceDbContext>();
-                context.SeedTestData();
-            }
+            //data seeding
+            //using(var scope = app.Services.CreateScope())
+            //{
+            //    var context = scope.ServiceProvider.GetRequiredService<AttendanceDbContext>();
+            //    context.SeedTestData();
+            //}
+            app.Services.Seed();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

@@ -21,7 +21,14 @@ namespace Data_Layer.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         }
-
+        public static void Seed(this IServiceProvider services)
+        {
+            using (var scope = services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<AttendanceDbContext>();
+                context.SeedTestData();
+            }
+        }
 
     }
 }
