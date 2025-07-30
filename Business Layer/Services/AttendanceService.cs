@@ -85,6 +85,7 @@ internal class AttendanceService(IUnitOfWork unitOfWork) : IAttendanceService
                          join emp in employees on att.EmployeeId equals emp.Code 
                          select new AttendanceDto
                          {
+                             Id = att.Id,
                              EmployeeId = emp.Code,
                              FullName = $"{emp.FullName.FirstName} {emp.FullName.SecondName} {emp.FullName.ThirdName} {emp.FullName.LastName}",
                              DepartmentName = emp.Department.Name,

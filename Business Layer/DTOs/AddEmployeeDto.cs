@@ -12,4 +12,6 @@ public class AddEmployeeDto
     [Required]
     public string Email { get; set; }
     public int DepartmentId { get; set; }
+    public string DisplayFullName =>
+    $"{FullName.FirstName} {FullName.SecondName} {FullName.ThirdName} {FullName.LastName}".Trim();
 }
