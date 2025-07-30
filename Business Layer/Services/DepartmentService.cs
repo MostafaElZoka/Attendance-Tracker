@@ -41,6 +41,10 @@ namespace Business_Layer.Services
             {
                 throw new Exception($"Department with ID {id} not found.");
             }
+            if(await unitOfWork.Employees.Exists(e => e.DepartmentId == id))
+            {
+                throw new Exception("Cannot delete department with existing employees.");
+            }
             unitOfWork.Departments.Delete(dept);
              await unitOfWork.SaveChangesAsync();
         }

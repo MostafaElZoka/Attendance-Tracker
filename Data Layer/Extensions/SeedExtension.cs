@@ -29,7 +29,7 @@ namespace Data_Layer.Extensions
 
             var financeDept = new Department
             {
-                Code = "FINMG",
+                Code = "FIMG",
                 Name = "Finance",
                 Location = "Giza",
             };

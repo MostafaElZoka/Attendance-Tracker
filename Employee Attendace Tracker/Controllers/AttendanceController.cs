@@ -100,20 +100,21 @@ namespace Employee_Attendace_Tracker.Controllers
         }
 
         // GET: AttendanceController/Delete/5
-        public async Task<ActionResult> Delete(int employeeId, DateTime date)
+        public async Task<ActionResult> Delete(int id)
         {
-            var record = (await attendanceService.GetAllAttendancesAsync(employeeId, null, date, date)).FirstOrDefault();
+            var record = await attendanceService.GetAttendanceAsync(id);
 
             return View(record);
         }
 
         // POST: AttendanceController/Delete/5
-        [HttpPost]
+        [HttpPost,ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
             try
             {
+                await attendanceService.DeleteAttendance(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

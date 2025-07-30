@@ -47,6 +47,18 @@ namespace Data_Layer.Repository
             return await _dbset.FindAsync(id);
         }
 
+        public async Task<T?> GetByIdWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbset;
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.FirstOrDefaultAsync(predicate);
+        }
+
         public void Update(T entity)
         {
             _dbset.Update(entity);

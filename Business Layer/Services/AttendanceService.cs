@@ -92,8 +92,22 @@ internal class AttendanceService(IUnitOfWork unitOfWork) : IAttendanceService
         return joinedDate.OrderByDescending(j => j.Date);
     }
 
-    public Task<AttendanceDto> GetAttendanceAsync(int id)
+    public async Task<AttendanceDto> GetAttendanceAsync(int id)
     {
-        throw new NotImplementedException();
+        var record = await unitOfWork.Attendances.GetByIdAsync(id);
+        if (record == null)
+            throw new Exception("Attendance record not found.");
+        var emp = await unitOfWork.Employees.GetByIdWithIncludesAsync(e=>e.Code==record.EmployeeId,e=>e.Department);
+        if (emp == null)
+            throw new Exception("employee record not found.");
+        return new AttendanceDto
+        {
+            Id = record.Id,
+            EmployeeId = record.EmployeeId,
+            FullName = $"{emp.FullName.FirstName} {emp.FullName.SecondName} {emp.FullName.ThirdName} {emp.FullName.LastName}",
+            DepartmentName = emp.Department.Name,
+            Date = record.Date,
+            Status = record.Status
+        };
     }
 }
