@@ -62,22 +62,23 @@ internal class AttendanceService(IUnitOfWork unitOfWork) : IAttendanceService
     public async Task<IEnumerable<AttendanceDto>> GetAllAttendancesAsync(int? employeeId, int? deptId, DateTime? fromDate, DateTime? toDate)
     {
         var attendancesQuery =  unitOfWork.Attendances.GetAllQueryable();
-        var employeesQuery =  unitOfWork.Employees.GetAllQueryable().Include(e=>e.Department);
+        IQueryable<Employee> employeesQuery =  unitOfWork.Employees.GetAllQueryable().Include(e=>e.Department);
         if(employeeId.HasValue)
         {
-           var employees = employeesQuery.Where(e => e.Code == employeeId.Value);
+            attendancesQuery = attendancesQuery.Where(e => e.EmployeeId == employeeId.Value);
         }
         if(deptId.HasValue)
         {
-           var employees = employeesQuery.Where(e => e.DepartmentId == deptId.Value);
+            employeesQuery = employeesQuery
+           .Where(e => e.DepartmentId == deptId.Value);
         }
         if (fromDate.HasValue)
         {
-           var attendances = attendancesQuery.Where(a => a.Date >= fromDate.Value);
+            attendancesQuery = attendancesQuery.Where(a => a.Date >= fromDate.Value);
         }
         if (toDate.HasValue)
         {
-           var attendances = attendancesQuery.Where(a => a.Date <= toDate.Value);
+            attendancesQuery = attendancesQuery.Where(a => a.Date <= toDate.Value);
         }
         var joinedDate = from att in attendancesQuery
                          join emp in employeesQuery on att.EmployeeId equals emp.Code 
@@ -90,7 +91,7 @@ internal class AttendanceService(IUnitOfWork unitOfWork) : IAttendanceService
                              Date = att.Date,
                              Status = att.Status
                          };
-        return joinedDate.OrderByDescending(j => j.Date);
+        return await joinedDate.OrderByDescending(j => j.Date).ToListAsync();
     }
 
     public async Task<AttendanceDto> GetAttendanceAsync(int id)

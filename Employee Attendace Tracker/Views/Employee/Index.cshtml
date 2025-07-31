@@ -15,7 +15,7 @@
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
             <tr>
-                <th>Name</th>
+                <th>Full Name</th>
                 <th>Email</th>
                 <th>Department</th>
                 <th style="width: 200px;">Actions</th>
@@ -27,7 +27,7 @@
                 foreach (var emp in Model)
                 {
                     <tr>
-                        <td>@emp.FullName.FirstName</td>
+                        <td>@emp.DisplayFullName</td>
                         <td>@emp.Email</td>
                         <td>
                             <select class="form-control" disabled>
