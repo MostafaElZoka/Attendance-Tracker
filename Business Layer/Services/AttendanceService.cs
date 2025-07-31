@@ -3,6 +3,7 @@ using Business_Layer.DTOs;
 using Business_Layer.Interfaces;
 using Data_Layer.Models;
 using Data_Layer.Unit_Of_Work;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business_Layer.Services;
 
@@ -60,26 +61,26 @@ internal class AttendanceService(IUnitOfWork unitOfWork) : IAttendanceService
 
     public async Task<IEnumerable<AttendanceDto>> GetAllAttendancesAsync(int? employeeId, int? deptId, DateTime? fromDate, DateTime? toDate)
     {
-        var attendances = await unitOfWork.Attendances.GetAllAsync();
-        var employees = await unitOfWork.Employees.GetAllAsync(e=>e.Department);
+        var attendancesQuery =  unitOfWork.Attendances.GetAllQueryable();
+        var employeesQuery =  unitOfWork.Employees.GetAllQueryable().Include(e=>e.Department);
         if(employeeId.HasValue)
         {
-            employees = employees.Where(e => e.Code == employeeId.Value);
+           var employees = employeesQuery.Where(e => e.Code == employeeId.Value);
         }
         if(deptId.HasValue)
         {
-            employees = employees.Where(e => e.DepartmentId == deptId.Value);
+           var employees = employeesQuery.Where(e => e.DepartmentId == deptId.Value);
         }
         if (fromDate.HasValue)
         {
-            attendances = attendances.Where(a => a.Date >= fromDate.Value);
+           var attendances = attendancesQuery.Where(a => a.Date >= fromDate.Value);
         }
         if (toDate.HasValue)
         {
-            attendances = attendances.Where(a => a.Date <= toDate.Value);
+           var attendances = attendancesQuery.Where(a => a.Date <= toDate.Value);
         }
-        var joinedDate = from att in attendances
-                         join emp in employees on att.EmployeeId equals emp.Code 
+        var joinedDate = from att in attendancesQuery
+                         join emp in employeesQuery on att.EmployeeId equals emp.Code 
                          select new AttendanceDto
                          {
                              Id = att.Id,

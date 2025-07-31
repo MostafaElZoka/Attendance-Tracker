@@ -42,6 +42,11 @@ namespace Data_Layer.Repository
             return await query.ToListAsync();
         }
 
+        public IQueryable<T> GetAllQueryable()
+        {
+            return _dbset.AsQueryable();
+        }
+
         public async Task<T?> GetByIdAsync(int id)
         {
             return await _dbset.FindAsync(id);

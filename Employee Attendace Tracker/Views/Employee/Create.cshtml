@@ -1,5 +1,5 @@
 ﻿@using Business_Layer.DTOs
-@model EmployeeDto
+@model AddEmployeeDto
 
 @{
     ViewData["Title"] = "Create Employee";
@@ -7,7 +7,15 @@
 }
 
 <h2 class="mb-4">Create Employee</h2>
-
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState[string.Empty]?.Errors.Any() == true)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState[string.Empty].Errors)
+        {
+            <div>@error.ErrorMessage</div>
+        }
+    </div>
+}
 <form asp-action="Create" method="post">
     <div class="mb-3">
         <label asp-for="FullName.FirstName" class="form-label"></label>

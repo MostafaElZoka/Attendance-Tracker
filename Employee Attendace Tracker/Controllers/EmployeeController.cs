@@ -113,6 +113,9 @@ namespace Employee_Attendace_Tracker.Controllers
             }
             catch (Exception ex)
             {
+                var depts = await departmentService.GetAllDepartmentsAsync();
+
+                ViewBag.Departments = new SelectList(depts, "Id", "Name");
                 ModelState.AddModelError("", ex.Message);
                 return View(employeeDto);
             }

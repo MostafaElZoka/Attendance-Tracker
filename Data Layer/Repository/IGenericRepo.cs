@@ -17,5 +17,6 @@ namespace Data_Layer.Repository
         void Update(T entity);
         void Delete(T entity);
         Task<bool> Exists(Expression<Func<T, bool>> predicate);
+        IQueryable<T> GetAllQueryable();
     }
 }

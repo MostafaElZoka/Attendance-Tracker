@@ -3,11 +3,19 @@
 
 @{
     ViewData["Title"] = "Edit Employee";
-    var departments = ViewBag.Departments as SelectList;
+    var departments = (ViewBag.Departments as SelectList)?? new SelectList(Enumerable.Empty<object>());
 }
 
 <h2 class="mb-4">Edit Employee</h2>
-
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState[string.Empty]?.Errors.Any() == true)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState[string.Empty].Errors)
+        {
+            <div>@error.ErrorMessage</div>
+        }
+    </div>
+}
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Code" />
 
