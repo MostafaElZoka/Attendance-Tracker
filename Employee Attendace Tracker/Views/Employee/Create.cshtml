@@ -18,12 +18,12 @@
 }
 <form asp-action="Create" method="post">
     <div class="mb-3">
-        <label asp-for="FullName.FirstName" class="form-label"></label>
-        <input asp-for="FullName.FirstName" class="form-control" />
-        <span asp-validation-for="FullName.FirstName" class="text-danger"></span>
+        <label asp-for="FullName" class="form-label"></label>
+        <input asp-for="FullName" class="form-control" />
+        <span asp-validation-for="FullName" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
+@*     <div class="mb-3">
         <label asp-for="FullName.SecondName" class="form-label"></label>
         <input asp-for="FullName.SecondName" class="form-control" />
         <span asp-validation-for="FullName.SecondName" class="text-danger"></span>
@@ -39,7 +39,7 @@
         <label asp-for="FullName.LastName" class="form-label"></label>
         <input asp-for="FullName.LastName" class="form-control" />
         <span asp-validation-for="FullName.LastName" class="text-danger"></span>
-    </div>
+    </div> *@
 
     <div class="mb-3">
         <label asp-for="Email" class="form-label"></label>

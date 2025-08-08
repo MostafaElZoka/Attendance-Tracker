@@ -1,6 +1,10 @@
 ﻿@using Business_Layer.DTOs
-@model IEnumerable<EmployeeDto>
-@{
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@* @model IEnumerable<EmployeeDto>
+ *@
+@model IPagedList<EmployeeDto>
+ @{
     ViewData["Title"] = "Employees";
     var departmentList = ViewBag.Departments as SelectList;
 }
@@ -27,7 +31,7 @@
                 foreach (var emp in Model)
                 {
                     <tr>
-                        <td>@emp.DisplayFullName</td>
+                        <td>@emp.FullName</td>
                         <td>@emp.Email</td>
                         <td>
                             <select class="form-control" disabled>
@@ -55,4 +59,7 @@
             }
         </tbody>
     </table>
+    <br />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
 </div>

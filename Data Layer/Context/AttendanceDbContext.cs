@@ -18,8 +18,8 @@ internal class AttendanceDbContext:DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Employee>()
-            .OwnsOne(e => e.FullName);
+        //modelBuilder.Entity<Employee>()
+        //    .OwnsOne(e => e.FullName);
 
         modelBuilder.Entity<Department>()
             .HasMany(d => d.Employees);

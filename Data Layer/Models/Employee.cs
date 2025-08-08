@@ -13,7 +13,8 @@ public class Employee
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Code {  get; set; }
     [Required]
-    public FullName FullName { get; set; }
+    [RegularExpression(@"^([A-Za-z]{2,}\s){3}[A-Za-z]{2,}$")]
+    public string FullName { get; set; }
     [EmailAddress]
     [Required]
     public string Email { get; set; }

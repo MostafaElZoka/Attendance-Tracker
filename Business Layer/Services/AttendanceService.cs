@@ -23,7 +23,7 @@ internal class AttendanceService(IUnitOfWork unitOfWork) : IAttendanceService
         var attendance = new Attendance
         {
             EmployeeId = attendanceDto.EmployeeId,
-            Date = attendanceDto.Date,
+            Date = attendanceDto.Date.Date,
             Status = attendanceDto.Status
         };
         await unitOfWork.Attendances.AddAsync(attendance);
@@ -48,8 +48,8 @@ internal class AttendanceService(IUnitOfWork unitOfWork) : IAttendanceService
         if (attendanceDto.Date > DateTime.Today)
             throw new Exception("Attendance date cannot be in the future.");
 
-        if (!await unitOfWork.Employees.Exists(e => e.Code == attendanceDto.EmployeeId))
-            throw new Exception("Employee does not exist.");
+        //if (!await unitOfWork.Employees.Exists(e => e.Code == attendanceDto.EmployeeId))
+        //    throw new Exception("Employee does not exist.");
 
         record.EmployeeId = attendanceDto.EmployeeId;
         record.Date = attendanceDto.Date;
@@ -63,9 +63,12 @@ internal class AttendanceService(IUnitOfWork unitOfWork) : IAttendanceService
     {
         var attendancesQuery =  unitOfWork.Attendances.GetAllQueryable();
         IQueryable<Employee> employeesQuery =  unitOfWork.Employees.GetAllQueryable().Include(e=>e.Department);
-        if(employeeId.HasValue)
+        var departmentsQuery = unitOfWork.Departments.GetAllQueryable();
+        if (employeeId.HasValue)
         {
             attendancesQuery = attendancesQuery.Where(e => e.EmployeeId == employeeId.Value);
+            employeesQuery = employeesQuery.Where(e => e.Code == employeeId.Value);
+            departmentsQuery = departmentsQuery.Where(d => d.Employees.Any(emp => emp.Code == employeeId.Value));
         }
         if(deptId.HasValue)
         {
@@ -81,12 +84,14 @@ internal class AttendanceService(IUnitOfWork unitOfWork) : IAttendanceService
             attendancesQuery = attendancesQuery.Where(a => a.Date <= toDate.Value);
         }
         var joinedDate = from att in attendancesQuery
-                         join emp in employeesQuery on att.EmployeeId equals emp.Code 
+                         join emp in employeesQuery on att.EmployeeId equals emp.Code
+                         join dept in departmentsQuery on emp.DepartmentId equals dept.Id
+                         where emp.DepartmentId == dept.Id
                          select new AttendanceDto
                          {
                              Id = att.Id,
                              EmployeeId = emp.Code,
-                             FullName = $"{emp.FullName.FirstName} {emp.FullName.SecondName} {emp.FullName.ThirdName} {emp.FullName.LastName}",
+                             FullName = $"{emp.FullName}",
                              DepartmentName = emp.Department.Name,
                              Date = att.Date,
                              Status = att.Status
@@ -106,7 +111,7 @@ internal class AttendanceService(IUnitOfWork unitOfWork) : IAttendanceService
         {
             Id = record.Id,
             EmployeeId = record.EmployeeId,
-            FullName = $"{emp.FullName.FirstName} {emp.FullName.SecondName} {emp.FullName.ThirdName} {emp.FullName.LastName}",
+            FullName = $"{emp.FullName}",
             DepartmentName = emp.Department.Name,
             Date = record.Date,
             Status = record.Status

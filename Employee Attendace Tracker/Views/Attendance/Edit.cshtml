@@ -1,0 +1,65 @@
+﻿@using Business_Layer.DTOs
+@model UpdateOrAddAttendanceDto
+@{
+    ViewData["Title"] = "Edit Attendance";
+    var empName = ViewBag.EmployeeName;
+    var deptName = ViewBag.DepartmentName;
+}
+
+<h2 class="mb-4">Edit Record</h2>
+
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState[string.Empty]?.Errors.Any() == true)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState[string.Empty].Errors)
+        {
+            <div>@error.ErrorMessage</div>
+        }
+    </div>
+}
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="EmployeeId" />
+
+    <div class="mb-3">
+        <label class="form-label">Full Name</label>
+        <select class="form-select" disabled>
+            <option value="">@empName</option>
+        </select>
+    </div>
+
+
+    <div class="mb-3">
+        <label class="form-label">Department Name</label>
+         <select class="form-select" disabled>
+            <option value="">@deptName</option>
+         </select>
+    </div>
+
+
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" class="form-select">
+            <option value="">Select a status</option>
+            @foreach (var stat in ViewBag.statuses as List<string>)
+            {
+                <option value="@stat">
+                    @stat
+                </option>
+            })
+        </select>
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Date" class="form-label"></label>
+        <input asp-for="Date" type="date" class="form-control" max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+        <span asp-validation-for="Date" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,5 +1,7 @@
 ﻿@using Business_Layer.DTOs
-@model IEnumerable<AttendanceDto>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<AttendanceDto>
 @{
     ViewData["Title"] = "Attendance List";
     var employees = ViewBag.Employees;
@@ -31,18 +33,18 @@
 
         <div class="col-md-3">
             <label class="form-label">From Date</label>
-            <input type="date" name="fromDate" class="form-control" />
+            <input type="date" name="fromDate" class="form-control" value="@ViewBag.FromDate" />
         </div>
 
         <div class="col-md-3">
             <label class="form-label">To Date</label>
-            <input type="date" name="toDate" class="form-control" />
+            <input type="date" name="toDate" class="form-control" value="@ViewBag.ToDate"/>
         </div>
 
         <div class="col-md-12 mt-3">
             <button type="submit" class="btn btn-primary">Apply Filters</button>
-            <a asp-action="Index" class="btn btn-secondary">Clear Filters</a>
-        </div>
+@*             <a asp-action="Index" class="btn btn-secondary">Clear Filters</a>
+ *@        </div>
     </div>
 </form>
 
@@ -68,8 +70,12 @@
                 </td>
                 <td>
                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Edit</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? Model.PageCount : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model,page => Url.Action("Index", new{page}))

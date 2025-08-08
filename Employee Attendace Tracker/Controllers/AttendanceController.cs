@@ -1,9 +1,11 @@
 ﻿using Business_Layer.DTOs;
 using Business_Layer.Interfaces;
+using Data_Layer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
+using X.PagedList.Extensions;
 
 namespace Employee_Attendace_Tracker.Controllers
 {
@@ -11,21 +13,26 @@ namespace Employee_Attendace_Tracker.Controllers
         IDepartmentService departmentService) : Controller
     {
         // GET: AttendanceController
-        public async Task<IActionResult> Index(int? employeeId, int? deptId, DateTime? fromDate, DateTime? toDate)
+        public async Task<IActionResult> Index(int? employeeId, int? deptId, DateTime? fromDate, DateTime? toDate,int? page)
         {
+            var pageSize = 2;
+            var pageNumber = page ?? 1;
+
             var attendances = await attendanceService.GetAllAttendancesAsync(employeeId,deptId,fromDate,toDate);
             var emps = await employeeService.GetAllEmployeesAsync();
             var depts = await departmentService.GetAllDepartmentsAsync();
 
-            ViewBag.Employees = new SelectList(emps, "Code", "DisplayFullName");
-            ViewBag.Departments = new SelectList(depts, "Id", "Name");
-            return View(attendances);
+            ViewBag.Employees = new SelectList(emps, "Code", "FullName",employeeId);
+            ViewBag.Departments = new SelectList(depts, "Id", "Name",deptId);
+            ViewBag.FromDate = fromDate?.ToString("yyyy-MM-dd");
+            ViewBag.ToDate = toDate?.ToString("yyyy-MM-dd");
+            return View(attendances.ToPagedList(pageNumber,pageSize));
         }
 
         public async Task<IActionResult> Mark()
         {
             var emps = await employeeService.GetAllEmployeesAsync();
-            ViewBag.Employees = new SelectList(emps, "Code", "DisplayFullName");
+            ViewBag.Employees = new SelectList(emps, "Code", "FullName");
 
             return View();
         }
@@ -79,23 +86,47 @@ namespace Employee_Attendace_Tracker.Controllers
         }
 
         // GET: AttendanceController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            try
+            {
+                var record = await attendanceService.GetAttendanceAsync(id);
+                var emp = await employeeService.GetEmployeeDtoByIdAsync(record.EmployeeId);
+                var dept = await departmentService.GetDepartmentDtoByIdAsync(emp.DepartmentId);
+                List<string> stats = Enum.GetNames(typeof(AttendanceStatus)).ToList();
+
+                ViewBag.EmployeeName = emp.FullName;
+                ViewBag.Statuses = stats;
+                ViewBag.DepartmentName = dept.Name;
+                return View(record);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error loading record: {ex.Message}";
+                return RedirectToAction(nameof(Index));
+            }
+
         }
 
         // POST: AttendanceController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, UpdateOrAddAttendanceDto dto)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
             try
             {
+                await attendanceService.EditAttendance(id, dto);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
-                return View();
+                ModelState.AddModelError("", ex.Message);
+                return View(dto);
             }
         }
 

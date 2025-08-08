@@ -15,10 +15,10 @@ internal class EmployeeService(IUnitOfWork unitOfWork) : IEmployeeService
         if (!await unitOfWork.Departments.Exists(d => d.Id == employee.DepartmentId))
             throw new Exception($"Department ID {employee.DepartmentId} doesn't exist");
 
-        var names = new[] { employee.FullName.FirstName, employee.FullName.SecondName, employee.FullName.ThirdName, employee.FullName.LastName };
+        //var names = new[] { employee.FullName.FirstName, employee.FullName.SecondName, employee.FullName.ThirdName, employee.FullName.LastName };
 
-        if (names.Any(n => n.Length < 2))
-            throw new Exception("Each name part must be at least 2 characters");
+        //if (names.Any(n => n.Length < 2))
+        //    throw new Exception("Each name part must be at least 2 characters");
 
         var emp = new Employee
         {
@@ -111,10 +111,10 @@ internal class EmployeeService(IUnitOfWork unitOfWork) : IEmployeeService
         if (!await unitOfWork.Departments.Exists(d => d.Id == updateEmployee.DepartmentId))
             throw new Exception($"Department ID {updateEmployee.DepartmentId} doesn't exist");
 
-        var names = new[] { updateEmployee.FullName.FirstName, updateEmployee.FullName.SecondName, updateEmployee.FullName.ThirdName, updateEmployee.FullName.LastName };
+        //var names = new[] { updateEmployee.FullName.FirstName, updateEmployee.FullName.SecondName, updateEmployee.FullName.ThirdName, updateEmployee.FullName.LastName };
 
-        if (names.Any(n => n.Length < 2))
-            throw new Exception("Each name part must be at least 2 characters");
+        //if (names.Any(n => n.Length < 2))
+        //    throw new Exception("Each name part must be at least 2 characters");
 
         emp.FullName = updateEmployee.FullName;
         emp.Email = updateEmployee.Email;

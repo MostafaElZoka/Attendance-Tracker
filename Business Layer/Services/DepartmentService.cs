@@ -17,7 +17,10 @@ namespace Business_Layer.Services
         {
             if (departmentDto.Code.Length != 4)
                 throw new Exception("Code must be exactly 4 characters");
-            
+
+            if(departmentDto.Code.Any(char.IsDigit))
+                throw new Exception("Code must not contain digits");
+
             if (await unitOfWork.Departments.Exists(d => d.Code == departmentDto.Code))
                 throw new Exception("Department code must be unique");
 

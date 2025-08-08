@@ -40,26 +40,14 @@ namespace Data_Layer.Extensions
 
             var emp1 = new Employee
             {
-                FullName = new FullName
-                {
-                    FirstName = "Ahmed",
-                    SecondName = "Mohamed",
-                    ThirdName = "Ali",
-                    LastName = "Omar"
-                },
+                FullName = "Ahmed Mohamed Ali Omar",
                 Email = "ahmed.omar@example.com",
                 DepartmentId = hrDept.Id
             };
 
             var emp2 = new Employee
             {
-                FullName = new FullName
-                {
-                    FirstName = "Amr",
-                    SecondName = "Ibrahim",
-                    ThirdName = "Ali",
-                    LastName = "Salama"
-                },
+                FullName = "Amr Magdy Mostafa Salama",
                 Email = "amr.salama@example.com",
                 DepartmentId = itDept.Id
             }; 

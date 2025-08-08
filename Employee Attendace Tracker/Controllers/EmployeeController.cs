@@ -8,19 +8,23 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PagedList;
+using X.PagedList.Extensions;
 namespace Employee_Attendace_Tracker.Controllers
 {
     public class EmployeeController(IEmployeeService employeeService,IDepartmentService departmentService) : Controller
     {
 
         // GET: EmployeeController1
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page)
         {
+            int pageSize = 2;
+            int pageNumber = page ?? 1;
             var emps = await employeeService.GetAllEmployeesAsync();
             var depts = await departmentService.GetAllDepartmentsAsync();
 
             ViewBag.Departments = new SelectList(depts, "Id", "Name");
-            return View(emps);
+            return View(emps.ToPagedList(pageNumber,pageSize));
         }
 
         // GET: EmployeeController1/Details/5

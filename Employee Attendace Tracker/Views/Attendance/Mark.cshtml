@@ -87,8 +87,8 @@
                     data: JSON.stringify(data),
                     success: function(response) {
                         if (response.success) {
-                            alert('Attendance saved successfully!');
-                            window.location.replace('/Attendance/Index'); // Redirect to the attendance list
+                            // alert('Attendance saved successfully!');
+                            // window.location.replace('/Attendance/Index'); // Redirect to the attendance list
                             $('#statusDisplay').text(status);
                         } else {
                             alert('Error: ' + response.error);
