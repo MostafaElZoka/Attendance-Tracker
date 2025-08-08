@@ -12,17 +12,23 @@ Live status updates using AJAX/jQuery
 Filtering by department/employee/date range
 
 Setup Instructions
-Prerequisites: .NET 7 SDK
+
+Prerequisites: .NET 9 SDK
 
 Clone repository:
 
 bash
+
 git clone https://github.com/MostafaElZoka/Attendance-Tracker.git
+
 cd employee-attendance-tracker
 
 Run application:
+
 bash
-dotnet run --project Presentation
+
+dotnet run --project '.\Employee Attendace Tracker\Employee Attendace Tracker.csproj'
+
 Access: https://localhost:5001 in browser
 
 Architecture
