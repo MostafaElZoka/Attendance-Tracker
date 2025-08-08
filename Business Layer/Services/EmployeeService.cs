@@ -2,6 +2,7 @@
 using Business_Layer.Interfaces;
 using Data_Layer.Models;
 using Data_Layer.Unit_Of_Work;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business_Layer.Services;
 
@@ -96,6 +97,20 @@ internal class EmployeeService(IUnitOfWork unitOfWork) : IEmployeeService
             DepartmentId = employee.DepartmentId
 
         };
+    }
+
+    public async Task<IEnumerable<EmployeeDto>> GetEmpoyeesByDepartmentAsync(int departmenttId)
+    {
+        var employees = unitOfWork.Employees.GetAllQueryable()
+            .Where(e => e.DepartmentId == departmenttId)
+            .Select(e => new EmployeeDto
+            {
+                Code = e.Code,
+                FullName = e.FullName,
+                Email = e.Email,
+                DepartmentId = e.DepartmentId
+            });
+        return await employees.ToListAsync();
     }
 
     public async Task UpdateEmployeeAsync(EmployeeDto updateEmployee)

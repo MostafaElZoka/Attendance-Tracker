@@ -29,6 +29,15 @@ namespace Employee_Attendace_Tracker.Controllers
             return View(attendances.ToPagedList(pageNumber,pageSize));
         }
 
+        public async Task<JsonResult> GetEmployeesByDepartment(int departmentId)
+        {
+            var employees = await employeeService.GetEmpoyeesByDepartmentAsync(departmentId);
+            return Json(employees.Select(e => new
+            {
+                value = e.Code,
+                text = e.FullName
+            }));
+        }
         public async Task<IActionResult> Mark()
         {
             var emps = await employeeService.GetAllEmployeesAsync();

@@ -18,16 +18,16 @@
 <form method="get" class="bg-light p-3 mb-4 rounded">
     <div class="row g-3">
         <div class="col-md-3">
-            <label class="form-label">Employee</label>
-            <select name="employeeId" asp-items="employees" class="form-select">
-                <option value="">All Employees</option>
+            <label class="form-label">Department</label>
+            <select name="deptId" asp-items="departments" class="form-select">
+                <option value="">All Departments</option>
             </select>
         </div>
 
         <div class="col-md-3">
-            <label class="form-label">Department</label>
-            <select name="deptId" asp-items="departments" class="form-select">
-                <option value="">All Departments</option>
+            <label class="form-label">Employee</label>
+            <select name="employeeId" asp-items="employees" class="form-select">
+                <option value="">All Employees</option>
             </select>
         </div>
 
@@ -79,3 +79,29 @@
 <br />
 Page @(Model.PageCount < Model.PageNumber ? Model.PageCount : Model.PageNumber) of @Model.PageCount
 @Html.PagedListPager(Model,page => Url.Action("Index", new{page}))
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('select[name="deptId"]').change(function () {
+                var deptId = $(this).val();
+                var employeeDropdown = $('select[name="employeeId"]');
+
+                employeeDropdown.empty(); 
+                employeeDropdown.append('<option value="">All Employees</option>');
+
+                if (deptId) {
+                    $.getJSON('@Url.Action("GetEmployeesByDepartment", "Attendance")', { departmentId: deptId })
+                        .done(function (data) {
+                            $.each(data, function (i, emp) {
+                                employeeDropdown.append($('<option>', { 
+                                    value: emp.value,
+                                    text: emp.text 
+                                }));
+                            });
+                        });
+                }
+            });
+        });
+    </script>
+}

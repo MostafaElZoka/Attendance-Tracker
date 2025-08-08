@@ -16,5 +16,6 @@ namespace Business_Layer.Interfaces
         public Task UpdateEmployeeAsync(EmployeeDto updateEmployee);
         public Task DeleteEmployeeAsync(int id);
         public Task<AttendanceSummaryDto> GetAttendanceMonthSummaryAsync(int employeeId);
+        public Task<IEnumerable<EmployeeDto>> GetEmpoyeesByDepartmentAsync(int departmenttId);
     }
 }
