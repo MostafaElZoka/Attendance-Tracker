@@ -40,7 +40,7 @@ namespace Data_Layer.Extensions
 
             var emp1 = new Employee
             {
-                FullName = "Ahmed Mohamed Ali Omar",
+                FullName = "Youssef Mohamed Ali Omar",
                 Email = "ahmed.omar@example.com",
                 DepartmentId = hrDept.Id
             };
@@ -50,9 +50,16 @@ namespace Data_Layer.Extensions
                 FullName = "Amr Magdy Mostafa Salama",
                 Email = "amr.salama@example.com",
                 DepartmentId = itDept.Id
-            }; 
+            };
 
-            context.Employees.AddRange(emp1, emp2);
+            var emp3 = new Employee
+            {
+                FullName = "Maria Sleem Youssef Reyad",
+                Email = "maria.sleem@example.com",
+                DepartmentId = hrDept.Id
+            };
+
+            context.Employees.AddRange(emp1, emp2, emp3);
             context.SaveChanges();
 
             var today = DateTime.Today;
@@ -70,18 +77,29 @@ namespace Data_Layer.Extensions
                 Date = today.AddDays(-2),
                 Status = AttendanceStatus.Present
             },
-
+            new Attendance
+            {
+                EmployeeId = emp3.Code,
+                Date = today.AddDays(-1),
+                Status = AttendanceStatus.Present
+            },
+            new Attendance
+            {
+                EmployeeId = emp3.Code,
+                Date = today.AddDays(-3),
+                Status = AttendanceStatus.Present
+            },
             new Attendance
             {
                 EmployeeId = emp1.Code,
-                Date = today.AddDays(-3),
+                Date = today.AddDays(-1),
                 Status = AttendanceStatus.Absent
             },
 
             new Attendance
             {
                 EmployeeId = emp2.Code,
-                Date = today.AddDays(-3),
+                Date = today.AddDays(-4),
                 Status = AttendanceStatus.Absent
             });
 

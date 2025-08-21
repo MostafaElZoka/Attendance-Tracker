@@ -59,7 +59,7 @@ internal class AttendanceService(IUnitOfWork unitOfWork) : IAttendanceService
         await unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<AttendanceDto>> GetAllAttendancesAsync(int? employeeId, int? deptId, DateTime? fromDate, DateTime? toDate)
+    public async Task<IEnumerable<AttendanceDto>> GetAllAttendancesAsync(int? employeeId, int? deptId, DateTime? fromDate, DateTime? toDate, string filterMethod="")
     {
         var attendancesQuery =  unitOfWork.Attendances.GetAllQueryable();
         IQueryable<Employee> employeesQuery =  unitOfWork.Employees.GetAllQueryable().Include(e=>e.Department);
@@ -96,7 +96,19 @@ internal class AttendanceService(IUnitOfWork unitOfWork) : IAttendanceService
                              Date = att.Date,
                              Status = att.Status
                          };
-        return await joinedDate.OrderByDescending(j => j.Date).ToListAsync();
+        if(filterMethod== "Employee")
+        {
+            joinedDate = joinedDate.OrderBy(j => j.FullName);
+        }
+        else if (filterMethod == "Department")
+        {
+            joinedDate = joinedDate.OrderBy(j => j.DepartmentName);
+        }
+        else if (filterMethod == "Date")
+        {
+            joinedDate = joinedDate.OrderByDescending(j => j.Date);
+        }
+        return await joinedDate/*.OrderByDescending(j => j.Date)*/.ToListAsync();
     }
 
     public async Task<AttendanceDto> GetAttendanceAsync(int id)

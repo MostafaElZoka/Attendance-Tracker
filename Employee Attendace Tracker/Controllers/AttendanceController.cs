@@ -13,12 +13,12 @@ namespace Employee_Attendace_Tracker.Controllers
         IDepartmentService departmentService) : Controller
     {
         // GET: AttendanceController
-        public async Task<IActionResult> Index(int? employeeId, int? deptId, DateTime? fromDate, DateTime? toDate,int? page)
+        public async Task<IActionResult> Index(int? employeeId, int? deptId, DateTime? fromDate, DateTime? toDate,int? page, [FromQuery] string filterMethod)
         {
-            var pageSize = 2;
+            var pageSize = 4;
             var pageNumber = page ?? 1;
 
-            var attendances = await attendanceService.GetAllAttendancesAsync(employeeId,deptId,fromDate,toDate);
+            var attendances = await attendanceService.GetAllAttendancesAsync(employeeId,deptId,fromDate,toDate,filterMethod);
             var emps = await employeeService.GetAllEmployeesAsync();
             var depts = await departmentService.GetAllDepartmentsAsync();
 
@@ -28,7 +28,7 @@ namespace Employee_Attendace_Tracker.Controllers
             ViewBag.ToDate = toDate?.ToString("yyyy-MM-dd");
             return View(attendances.ToPagedList(pageNumber,pageSize));
         }
-
+        //this is to make filters live
         public async Task<JsonResult> GetEmployeesByDepartment(int departmentId)
         {
             var employees = await employeeService.GetEmpoyeesByDepartmentAsync(departmentId);

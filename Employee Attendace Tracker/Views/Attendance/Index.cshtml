@@ -7,7 +7,11 @@
     var employees = ViewBag.Employees;
     var departments = ViewBag.Departments;
 }
-
+<style>
+    .cursor-pointer{
+        cursor: pointer;
+    }
+</style>
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Attendance Records</h2>
@@ -50,15 +54,16 @@
 
 <table class="table table-bordered table-striped">
     <thead class="table-dark">
+        <h4>You can filter by clicking the table headers</h4>
         <tr>
-            <th>Employee</th>
-            <th>Department</th>
-            <th>Date</th>
-            <th>Status</th>
+            <th class="cursor-pointer">Employee</th>
+            <th class="cursor-pointer">Department</th>
+            <th class="cursor-pointer">Date</th>
+            <th >Status</th>
             <th>Actions</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="tableBody">
         @foreach (var item in Model)
         {
             <tr>
@@ -102,6 +107,20 @@ Page @(Model.PageCount < Model.PageNumber ? Model.PageCount : Model.PageNumber) 
                         });
                 }
             });
+            $("th").click(function(){
+                    var column = $(this).text();
+                      $.ajax({
+                    url:`@Url.Action("Index", "Attendance")`,
+                    type: "GET",
+                    data: {filterMethod: column},
+                    success: function(response) {
+                        var newBody = $(response).find("#tableBody");
+                        $("#tableBody").replaceWith(newBody);
+                    }
+                })
+            })
+
+
         });
     </script>
 }
